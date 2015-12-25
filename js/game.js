@@ -1,6 +1,7 @@
 function Game(width, height) {
 	this.width = width;
 	this.height = height;
+	this.playing = false;
 
 	this.svg = d3.select('#game')
 		.append('svg')
@@ -23,4 +24,19 @@ function Game(width, height) {
 		.datum({endAngle: Math.PI / 64})
 		.style('fill', '#6495ED')
 		.attr('d', arc.startAngle(-Math.PI / 64));
+
+	this.levelEl = this.svg.append('text')
+		.attr('text-anchor', 'middle')
+		.style('font-size', 100)
+		.style('fill', '#555')
+		.attr('transform', 'translate(0,30)')
+		.text(0);
 }
+
+Game.prototype.startLevel = function(level) {
+	this.setRemaining(level);
+};
+
+Game.prototype.setRemaining = function(remaining) {
+	this.levelEl.text(remaining);
+};
