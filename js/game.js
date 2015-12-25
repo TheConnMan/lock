@@ -3,6 +3,8 @@ function Game(width, height) {
 	this.height = height;
 	this.arcWidth = Math.PI / 64;
 	this.arcCenter = 0;
+	this.innerRadius = 200;
+	this.outerRadius = 240;
 
 	this.board = d3.select('#game')
 		.append('svg')
@@ -14,8 +16,8 @@ function Game(width, height) {
 		.attr('transform', 'translate(' + this.width / 2 + ',' + this.height / 2 + ')');
 
 	this.arc = d3.svg.arc()
-		.innerRadius(180)
-		.outerRadius(240)
+		.innerRadius(this.innerRadius)
+		.outerRadius(this.outerRadius)
 		.startAngle(0);
 
 	this.svg.append('path')

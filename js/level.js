@@ -20,6 +20,7 @@ function Level(game, level) {
 }
 
 Level.prototype.start = function() {
+	this.generateTarget();
 	var me = this;
 	this.interval = setInterval(function() {
 		me.redraw();
@@ -27,6 +28,7 @@ Level.prototype.start = function() {
 };
 
 Level.prototype.clicked = function() {
+	this.generateTarget();
 	this.forward = !this.forward;
 	this.remaining--;
 	this.game.setRemaining(this.remaining);
@@ -42,4 +44,18 @@ Level.prototype.redraw = function() {
 	this.game.arcEl
 		.datum({endAngle: this.game.arcCenter + this.game.arcWidth})
 		.attr('d', this.game.arc);
+};
+
+Level.prototype.generateTarget = function() {
+	if (this.target) {
+		this.target.remove();
+	}
+	this.targetAngle = 2 * Math.PI * Math.random();
+	var r = (this.game.outerRadius + this.game.innerRadius) / 2;
+	var x = r * Math.cos(this.targetAngle);
+	var y = r * Math.sin(this.targetAngle);
+	this.target = this.game.svg.append('circle')
+		.attr('transform', 'translate(' + x + ',' + y + ')')
+		.attr('r', (this.game.outerRadius - this.game.innerRadius) / 2 - 5)
+		.style('fill', 'yellow');
 };
