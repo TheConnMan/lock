@@ -1,10 +1,11 @@
 function Level(game, level) {
 	this.game = game;
-	this.level = level;
+	this.remaining = level;
 	this.interval = undefined;
 	this.period = 4;
 	this.intervalTime = 10;
 	this.velocity = 2 * Math.PI / (1000 * this.period);
+	this.forward = true;
 
 	this.game.setRemaining(level);
 
@@ -26,11 +27,17 @@ Level.prototype.start = function() {
 };
 
 Level.prototype.clicked = function() {
-	console.log('Clicked');
+	this.forward = !this.forward;
+	this.remaining--;
+	this.game.setRemaining(this.remaining);
+	if (this.remaining === 0) {
+		clearInterval(this.interval);
+		this.interval = undefined;
+	}
 };
 
 Level.prototype.redraw = function() {
-	this.game.arcCenter += this.velocity * this.intervalTime;
+	this.game.arcCenter += this.velocity * this.intervalTime * (this.forward ? 1 : -1);
 	this.game.arc.startAngle(this.game.arcCenter - this.game.arcWidth);
 	this.game.arcEl
 		.datum({endAngle: this.game.arcCenter + this.game.arcWidth})
