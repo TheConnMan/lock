@@ -1,5 +1,6 @@
 function Level(game, level) {
 	this.game = game;
+	this.level = level;
 	this.remaining = level;
 	this.interval = undefined;
 	this.period = 4;
@@ -46,6 +47,10 @@ Level.prototype.clicked = function() {
 
 Level.prototype.redraw = function() {
 	this.game.arcCenter += this.velocity * this.intervalTime * (this.forward ? 1 : -1);
+	this.render();
+};
+
+Level.prototype.render = function() {
 	this.game.arc.startAngle(this.game.arcCenter - this.game.arcWidth);
 	this.game.arcEl
 		.datum({endAngle: this.game.arcCenter + this.game.arcWidth})
@@ -67,7 +72,15 @@ Level.prototype.generateTarget = function() {
 		.style('fill', 'yellow');
 };
 
+Level.prototype.reset = function() {
+	this.target.remove();
+	this.game.arcCenter = 0;
+	this.render();
+};
+
 Level.prototype.gameOver = function(win) {
 	clearInterval(this.interval);
 	this.interval = undefined;
+	this.reset();
+	this.game.startLevel(this.level + (win ? 1 : 0));
 };
