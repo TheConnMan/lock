@@ -82,5 +82,10 @@ Level.prototype.gameOver = function(win) {
 	clearInterval(this.interval);
 	this.interval = undefined;
 	this.reset();
-	this.game.startLevel(this.level + (win ? 1 : 0));
+	var newLevel = this.level + (win ? 1 : 0);
+	var bestLevel = parseInt(window.localStorage.level);
+	if (!bestLevel || bestLevel < newLevel) {
+		window.localStorage.level = newLevel;
+	}
+	this.game.startLevel(newLevel);
 };
