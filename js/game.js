@@ -1,16 +1,19 @@
 function Game(width, height) {
 	this.width = width;
 	this.height = height;
-	this.playing = false;
+	this.arcWidth = Math.PI / 64;
+	this.arcCenter = 0;
 
-	this.svg = d3.select('#game')
+	this.board = d3.select('#game')
 		.append('svg')
 		.attr('width', width)
-		.attr('height', height)
+		.attr('height', height);
+
+	this.svg = this.board
 		.append('g')
 		.attr('transform', 'translate(' + this.width / 2 + ',' + this.height / 2 + ')');
 
-	var arc = d3.svg.arc()
+	this.arc = d3.svg.arc()
 		.innerRadius(180)
 		.outerRadius(240)
 		.startAngle(0);
@@ -18,12 +21,12 @@ function Game(width, height) {
 	this.svg.append('path')
 		.datum({endAngle: 2 * Math.PI})
 		.style('fill', '#444')
-		.attr('d', arc);
+		.attr('d', this.arc);
 
-	this.arc = this.svg.append('path')
-		.datum({endAngle: Math.PI / 64})
+	this.arcEl = this.svg.append('path')
+		.datum({endAngle: this.arcWidth})
 		.style('fill', '#6495ED')
-		.attr('d', arc.startAngle(-Math.PI / 64));
+		.attr('d', this.arc.startAngle(-this.arcWidth));
 
 	this.levelEl = this.svg.append('text')
 		.attr('text-anchor', 'middle')
@@ -34,7 +37,7 @@ function Game(width, height) {
 }
 
 Game.prototype.startLevel = function(level) {
-	this.setRemaining(level);
+	this.level = new Level(this, level);
 };
 
 Game.prototype.setRemaining = function(remaining) {
