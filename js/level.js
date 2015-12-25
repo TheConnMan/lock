@@ -28,13 +28,19 @@ Level.prototype.start = function() {
 };
 
 Level.prototype.clicked = function() {
-	this.generateTarget();
 	this.forward = !this.forward;
 	this.remaining--;
-	this.game.setRemaining(this.remaining);
-	if (this.remaining === 0) {
-		clearInterval(this.interval);
-		this.interval = undefined;
+	var targetRadiusAngle = 2 * this.targetRadius / (this.game.outerRadius + this.game.innerRadius) + this.game.arcWidth;
+	var modArcCenter = (10 * Math.PI + this.game.arcCenter) % (2 * Math.PI);
+	if (modArcCenter >= this.targetAngle - targetRadiusAngle && modArcCenter <= this.targetAngle + targetRadiusAngle) {
+		this.game.setRemaining(this.remaining);
+		if (this.remaining === 0) {
+			this.gameOver(true);
+		} else {
+			this.generateTarget();
+		}
+	} else {
+		this.gameOver(false);
 	}
 };
 
@@ -52,10 +58,16 @@ Level.prototype.generateTarget = function() {
 	}
 	this.targetAngle = 2 * Math.PI * Math.random();
 	var r = (this.game.outerRadius + this.game.innerRadius) / 2;
-	var x = r * Math.cos(this.targetAngle);
-	var y = r * Math.sin(this.targetAngle);
+	var x = r * Math.sin(this.targetAngle);
+	var y = -r * Math.cos(this.targetAngle);
+	this.targetRadius = (this.game.outerRadius - this.game.innerRadius) / 2 - 5;
 	this.target = this.game.svg.append('circle')
 		.attr('transform', 'translate(' + x + ',' + y + ')')
-		.attr('r', (this.game.outerRadius - this.game.innerRadius) / 2 - 5)
+		.attr('r', this.targetRadius)
 		.style('fill', 'yellow');
+};
+
+Level.prototype.gameOver = function(win) {
+	clearInterval(this.interval);
+	this.interval = undefined;
 };
