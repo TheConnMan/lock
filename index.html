@@ -43,6 +43,13 @@
 		</style>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.12/d3.min.js" charset="utf-8"></script>
+		<script src="./js/game.js" charset="utf-8"></script>
 		<script src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+		<script>
+			$(function() {
+				var game = new Game($('#game').width(), $('#game').width());
+				!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+			});
+		</script>
 	</body>
 </html>
